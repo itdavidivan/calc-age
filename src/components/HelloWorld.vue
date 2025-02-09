@@ -20,15 +20,16 @@
         <button @click="calculateAge">Calculate</button>
       </div>
       <div class="dates">
-        <div class="results">
+        <p class="results" v-if="numberIsNotValid">Something is wrong!</p>
+        <div v-else class="results">
           <h2>
-            <span>{{ age.years }}</span> years
+            <span>{{ age.years > 0 ? age.years : " -- " }}</span> years
           </h2>
           <h2>
-            <span>{{ age.months }}</span> month
+            <span>{{ age.months > 0 ? age.months : " -- " }}</span> month
           </h2>
           <h2>
-            <span>{{ age.days }}</span> days
+            <span>{{ age.days > 0 ? age.days : " -- " }}</span> days
           </h2>
         </div>
       </div>
@@ -40,6 +41,7 @@
 export default {
   data() {
     return {
+      numberIsNotValid: false,
       day: "",
       month: "",
       year: "",
@@ -53,7 +55,7 @@ export default {
 
   methods: {
     calculateAge() {
-      if (this.day && this.month && this.year) {
+      if (this.day < 32 && this.month < 13 && this.year < 2026) {
         const birthDate = new Date(this.year, this.month, this.day);
         const currentDate = new Date();
 
@@ -73,11 +75,13 @@ export default {
             0
           );
           days += lastMonth.getDate();
-        }
 
-        this.age.years = years;
-        this.age.months = months;
-        this.age.days = days;
+          this.age.years = years;
+          this.age.months = months;
+          this.age.days = days;
+        }
+      } else {
+        this.numberIsNotValid = true;
       }
     },
   },
